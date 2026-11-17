@@ -1,0 +1,7 @@
+node_modules
+.next
+dev.log
+AGENTS.md
+.claude
+.impeccable
+.playwright-mcp

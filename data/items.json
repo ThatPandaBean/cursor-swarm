@@ -1,0 +1,15 @@
+{
+  "note": "Placeholder numbers. The items are real, the counts are not. Replace them with your own.",
+  "rows": [
+    { "title": "Intro to CS with AI", "category": "Class", "tasks": 24, "planned": 40, "spent": 36, "done": 18 },
+    { "title": "Principles of Macroeconomics", "category": "Class", "tasks": 18, "planned": 36, "spent": 30, "done": 12 },
+    { "title": "Intro to Psych", "category": "Class", "tasks": 15, "planned": 30, "spent": 24, "done": 11 },
+    { "title": "Human Nature in Sci-Fi", "category": "Class", "tasks": 12, "planned": 24, "spent": 20, "done": 9 },
+    { "title": "Choir", "category": "Class", "tasks": 8, "planned": 20, "spent": 18, "done": 7 },
+    { "title": "OurCo internship", "category": "Work", "tasks": 30, "planned": 60, "spent": 55, "done": 22 },
+    { "title": "RLCIE", "category": "Work", "tasks": 14, "planned": 30, "spent": 22, "done": 8 },
+    { "title": "Tennis club", "category": "Club", "tasks": 10, "planned": 24, "spent": 20, "done": 8 },
+    { "title": "Badminton club", "category": "Club", "tasks": 9, "planned": 20, "spent": 16, "done": 6 },
+    { "title": "AI skills lab", "category": "Lab", "tasks": 16, "planned": 24, "spent": 21, "done": 12 }
+  ]
+}
