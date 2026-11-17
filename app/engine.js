@@ -35,6 +35,8 @@ export function createEngine({ root, styles, n }) {
   const kF = q('[data-role=kF]');
   const kCv = q('[data-role=kCv]');
   const kFv = q('[data-role=kFv]');
+  const speedEl = q('[data-role=speed]');
+  const speedOut = q('[data-role=speedv]');
   const playBtn = q('[data-role=play]');
   const scrub = q('[data-role=scrub]');
   const clock = q('[data-role=clock]');
@@ -190,10 +192,14 @@ export function createEngine({ root, styles, n }) {
   // ---- one requestAnimationFrame loop drives every tween
   const tweens = new Set();
   let raf = 0;
+  // speed multiplier from the Speed slider; read every frame so it changes mid-run
+  let speed = 1;
   const tick = (t) => {
     raf = 0;
     for (const tw of [...tweens]) {
-      const p = Math.min(1, Math.max(0, (t - tw.t0) / tw.dur));
+      tw.el += Math.max(0, t - tw.last) * (tw.scaled ? speed : 1);
+      tw.last = t;
+      const p = Math.min(1, tw.el / tw.dur);
       tw.fn(p);
       if (p >= 1) {
         tweens.delete(tw);
@@ -202,16 +208,16 @@ export function createEngine({ root, styles, n }) {
     }
     if (tweens.size) raf = requestAnimationFrame(tick);
   };
-  const tween = (c, dur, fn) =>
+  const tween = (c, dur, fn, scaled = true) =>
     new Promise((res, rej) => {
       if (c.stop) return rej(STOP);
-      tweens.add({ ctl: c, t0: performance.now(), dur: Math.max(1, dur), fn, res, rej });
+      tweens.add({ ctl: c, last: performance.now(), el: 0, dur: Math.max(1, dur), scaled, fn, res, rej });
       if (!raf) raf = requestAnimationFrame(tick);
     });
   const sleep = (c, ms) =>
     new Promise((res, rej) => {
       if (c.stop) return rej(STOP);
-      setTimeout(() => (c.stop ? rej(STOP) : res()), ms);
+      setTimeout(() => (c.stop ? rej(STOP) : res()), ms / speed);
     });
   const abortCtl = (c) => {
     if (!c) return;
@@ -410,6 +416,14 @@ export function createEngine({ root, styles, n }) {
     kC.disabled = !on;
     kF.disabled = !on;
   };
+  // slider 0..100 maps exponentially to 0.25x..40x; the far end is the silly max
+  const onSpeed = () => {
+    const v = +speedEl.value;
+    const s = 0.25 * Math.pow(160, v / 100);
+    speed = Math.abs(s - 1) < 0.06 ? 1 : s;
+    speedOut.textContent = v >= 100 ? `${Math.round(speed)}x max` : `${speed < 10 ? speed.toFixed(speed === 1 ? 0 : 1) : Math.round(speed)}x`;
+  };
+  onSpeed();
   const onSlider = () => {
     sliderLabels();
     whatIf(kC.value / 100, kF.value / 100);
@@ -491,7 +505,7 @@ export function createEngine({ root, styles, n }) {
     playCtl = c;
     playBtn.textContent = 'Pause';
     try {
-      await tween(c, span / 2, (p) => seek(p >= 1 ? duration() : from + p * span));
+      await tween(c, span / 2, (p) => seek(p >= 1 ? duration() : from + p * span), false);
     } catch (e) {
       if (e !== STOP) throw e;
       return;
@@ -536,13 +550,15 @@ export function createEngine({ root, styles, n }) {
   let epoch = 0;
 
   const job = async (a, fn) => {
+    const mine = ctl;
     const fr = rel(a.face);
     E({ k: 'work', id: a.id, v: true });
     place(a, fr.x + fr.w / 2, fr.y + fr.h / 2);
     try {
       await fn(a);
     } finally {
-      E({ k: 'work', id: a.id, v: false });
+      // after Skip or Rebuild, stragglers must not append events to the finished timeline
+      if (!mine.stop) E({ k: 'work', id: a.id, v: false });
     }
   };
 
@@ -796,6 +812,7 @@ export function createEngine({ root, styles, n }) {
   scrub.addEventListener('input', onScrub);
   kC.addEventListener('input', onSlider);
   kF.addEventListener('input', onSlider);
+  speedEl.addEventListener('input', onSpeed);
   window.addEventListener('resize', hideMe);
 
   return {
@@ -812,6 +829,7 @@ export function createEngine({ root, styles, n }) {
       scrub.removeEventListener('input', onScrub);
       kC.removeEventListener('input', onSlider);
       kF.removeEventListener('input', onSlider);
+      speedEl.removeEventListener('input', onSpeed);
       window.removeEventListener('resize', hideMe);
       created.forEach((el) => el.remove());
     },

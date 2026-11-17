@@ -1,4 +1,4 @@
-.page { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+.page { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; overflow-x: clip; }
 .head h1 { margin: 0 0 4px; font-size: 24px; }
 .head p { margin: 0 0 16px; color: var(--muted); max-width: 62ch; }
 
@@ -11,6 +11,9 @@
 .face[data-working='1'] { transform: translateY(-7px); }
 .face[data-working='1'] svg { box-shadow: 0 6px 10px -2px rgb(0 0 0 / .3); }
 .buttons { display: flex; gap: 8px; }
+.speed { display: grid; grid-template-columns: auto 160px 54px; gap: 10px; align-items: center; margin-left: auto; font-size: 13px; }
+.speed input { accent-color: #ea580c; }
+.speed output { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; }
 .buttons button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
 .buttons button:disabled { opacity: .45; cursor: default; }
 .buttons button:not(:disabled):hover { border-color: var(--muted); }

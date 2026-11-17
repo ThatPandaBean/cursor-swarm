@@ -48,6 +48,11 @@ export default function Sheet({ rows, title, note }) {
             </li>
           ))}
         </ul>
+        <label className={s.speed}>
+          <span>Speed</span>
+          <input type="range" data-role="speed" min="0" max="100" step="1" defaultValue="27" aria-label="Swarm speed" />
+          <output data-role="speedv">1x</output>
+        </label>
         <div className={s.buttons}>
           <button type="button" data-role="skip" disabled>Skip</button>
           <button type="button" data-role="rebuild">Rebuild</button>

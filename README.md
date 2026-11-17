@@ -17,6 +17,8 @@ Sum types the headers. Copy types the titles, Tags tags a category, and four age
 - **What-if sliders.** After the run, scale tasks and tasks done. Rows, rates, totals, heat map, bars and the chart title all recompute.
 - **Replay scrubber.** Every change is recorded as an event, so you can scrub or play the whole run back at 2x.
 
+- **Speed slider.** Runs from 0.25x to 40x and can be changed mid-run. The far right end is the silly max.
+
 Other details: `data-cell` and `data-f` on every cell, a formula bar, Skip and Rebuild, and a phone layout that drops three columns (the agents still fill them, without a cursor).
 
 ## Run it
